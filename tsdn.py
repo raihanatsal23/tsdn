@@ -21,15 +21,15 @@ def create_interactive_plot(df):
                x_axis_label='Start Time', y_axis_label='Profile Name')
 
     # Get unique Profile Names
-    profile_names = df['Profile Name'].unique()
+    profile_names = df_viewing['Profile Name'].unique()
 
     # Assign a color to each unique Device Type using Viridis color palette
-    colors = Viridis[len(df['Device Type'].unique())]
+    colors = Viridis[len(df_viewing['Device Type'].unique())]
 
     legend_items = []
 
-    for i, device_type in enumerate(df['Device Type'].unique()):
-        source = ColumnDataSource(df[df['Device Type'] == device_type])
+    for i, device_type in enumerate(df_viewing['Device Type'].unique()):
+        source = ColumnDataSource(df_viewing[df_viewing['Device Type'] == device_type])
 
         # Scatter plot
         scatter = p.scatter(x='Start Time', y='Profile Name', source=source,
