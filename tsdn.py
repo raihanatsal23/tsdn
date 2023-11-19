@@ -3,6 +3,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.ensemble import IsolationForest
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import LabelEncoder
+from scipy.stats import zscore
 import seaborn as sns
 
 # Baca data
@@ -14,10 +17,8 @@ df_viewing['Duration_seconds'] = pd.to_timedelta(df_viewing['Duration']).dt.tota
 # Mengubah kolom Start Time ke tipe datetime dan Mengurutkan berdasarkan waktu
 df_viewing['Start Time'] = pd.to_datetime(df_viewing['Start Time'])
 df_viewing = df_viewing.sort_values(by='Start Time')
+df_viewing['Duration'] = pd.to_timedelta(df_viewing['Duration'])
 df_viewing['End Time'] = df_viewing['Start Time'] + df_viewing['Duration']
-
-# Konversi Duration ke string untuk memudahkan penanganan di Streamlit
-df_viewing['Duration_str'] = df_viewing['Duration'].astype(str)
 
 # Visualisasi interaktif dengan Streamlit
 def interactive_visualization(df):
@@ -42,7 +43,7 @@ def interactive_visualization(df):
 
     # Debugging: Tampilkan jenis data dan nilai unik dari kolom "Duration"
     st.write("Data Types:", df_viewing.dtypes)
-    st.write("Unique Durations:", df_viewing['Duration_str'].unique())
+    st.write("Unique Durations:", df_viewing['Duration'].unique())
 
     features = ['Duration_seconds']
     isolation_forest = IsolationForest(contamination=0.05)  # Ubah tingkat kontaminasi sesuai kebutuhan
