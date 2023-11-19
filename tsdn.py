@@ -22,7 +22,7 @@ df_viewing['End Time'] = df_viewing['Start Time'] + df_viewing['Duration']
 
 # Visualisasi interaktif dengan Streamlit
 def interactive_visualization(df):
-    st.title('Interactive Visualization with Streamlit')
+    st.title('Visualization User Viewing Activity')
 
     # Sidebar untuk pemilihan opsi
     selected_profile = st.sidebar.selectbox('Select Profile Name:', df['Profile Name'].unique())
