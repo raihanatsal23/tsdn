@@ -64,8 +64,8 @@ def main():
     st.title('Interactive Visualization with Bokeh and Streamlit')
 
     # Filter data
-    start_time = st.date_input('Select start date', min_value=df_viewing['Start Time'].min(), max_value=df_viewing['Start Time'].max(), format='YYYY-MM-DD')
-    end_time = st.date_input('Select end date', min_value=start_time, max_value=df_viewing['Start Time'].max(), format='YYYY-MM-DD')
+    start_time = st.date_input('Select start date', min_value=df_viewing['Start Time'].min().date(), max_value=df_viewing['Start Time'].max().date())
+    end_time = st.date_input('Select end date', min_value=start_time, max_value=df_viewing['Start Time'].max().date())
 
     # Filter data based on date range
     filtered_df = df_viewing[(df_viewing['Start Time'] >= start_time) & (df_viewing['Start Time'] <= end_time)]
