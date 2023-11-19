@@ -16,7 +16,7 @@ df_viewing = pd.read_csv('All_ViewingActivity.csv')
 df_viewing['Start Time'] = pd.to_datetime(df_viewing['Start Time'])
 
 # Create Bokeh plot
-def create_interactive_plot(df):
+def create_interactive_plot(df_viewing):
     p = figure(plot_width=800, plot_height=500, title='Device Type by Profile Name with Start Time',
                x_axis_label='Start Time', y_axis_label='Profile Name')
 
