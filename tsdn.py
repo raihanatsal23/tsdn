@@ -12,9 +12,6 @@ df_profiles = pd.read_csv('All_Profiles.csv')
 df_search = pd.read_csv('All_SearchHistory.csv')
 df_viewing = pd.read_csv('All_ViewingActivity.csv')
 
-# Convert Start Time to datetime
-df_viewing['Start Time'] = pd.to_datetime(df_viewing['Start Time'])
-
 # Create Bokeh plot
 def create_interactive_plot(df_viewing):
     p = figure(plot_width=800, plot_height=500, title='Device Type by Profile Name with Start Time',
