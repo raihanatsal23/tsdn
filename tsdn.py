@@ -1,6 +1,5 @@
-import numpy as np
-import pandas as pd
 import streamlit as st
+import pandas as pd
 from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource, HoverTool, Legend
 from bokeh.palettes import Viridis
@@ -15,9 +14,6 @@ df_viewing = pd.read_csv('All_ViewingActivity.csv')
 
 # Convert Start Time to datetime
 df_viewing['Start Time'] = pd.to_datetime(df_viewing['Start Time'])
-
-# Handling NaN values
-df_viewing = df_viewing.dropna(subset=['Start Time'])
 
 # Create Bokeh plot
 def create_interactive_plot(df):
@@ -63,25 +59,20 @@ def create_interactive_plot(df):
 def main():
     st.title('Interactive Visualization with Bokeh and Streamlit')
 
-    # Sidebar for date input
-    st.sidebar.subheader("Date Range Selection")
+    # Filter data
     min_start_time = df_viewing['Start Time'].min()
     max_start_time = df_viewing['Start Time'].max()
 
-    if not pd.isnull(min_start_time) and not pd.isnull(max_start_time):
-        start_date = st.sidebar.date_input("Select start date", min_value=min_start_time.date(), max_value=max_start_time.date())
-        end_date = st.sidebar.date_input("Select end date", min_value=start_date, max_value=max_start_time.date())
+    start_date = st.sidebar.date_input("Select start date", min_value=min_start_time, max_value=max_start_time)
+    end_date = st.sidebar.date_input("Select end date", min_value=start_date, max_value=max_start_time)
 
-        # Filter data based on date range
-        filtered_df = df_viewing[(df_viewing['Start Time'] >= start_date) & (df_viewing['Start Time'] <= end_date)]
+    filtered_df = df_viewing[(df_viewing['Start Time'] >= start_date) & (df_viewing['Start Time'] <= end_date)]
 
-        # Create Bokeh plot
-        bokeh_plot = create_interactive_plot(filtered_df)
+    # Create Bokeh plot
+    bokeh_plot = create_interactive_plot(filtered_df)
 
-        # Display Bokeh plot using st.bokeh_chart
-        st.bokeh_chart(bokeh_plot)
-    else:
-        st.warning("No valid date range available in the data.")
+    # Display Bokeh plot using st.bokeh_chart
+    st.bokeh_chart(bokeh_plot)
 
 if __name__ == '__main__':
     main()
