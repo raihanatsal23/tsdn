@@ -1,83 +1,41 @@
 import streamlit as st
+import numpy as np
 import pandas as pd
-from bokeh.plotting import figure
-from bokeh.models import ColumnDataSource, HoverTool, Legend
-from bokeh.palettes import Viridis
-from datetime import datetime
+import matplotlib.pyplot as plt
+from sklearn.ensemble import IsolationForest
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import LabelEncoder
+from scipy.stats import zscore
+import seaborn as sns
 
-# Load your data
-df_clickstream = pd.read_csv('All_Clickstream.csv')
-df_device = pd.read_csv('All_Devices.csv')
-df_profiles = pd.read_csv('All_Profiles.csv')
-df_search = pd.read_csv('All_SearchHistory.csv')
+# Baca data
 df_viewing = pd.read_csv('All_ViewingActivity.csv')
 
-# Convert Start Time to datetime
+# Konversi Durasi ke Detik
+df_viewing['Duration_seconds'] = pd.to_timedelta(df_viewing['Duration']).dt.total_seconds()
+# Mengubah kolom Start Time ke tipe datetime dan Mengurutkan berdasarkan waktu
 df_viewing['Start Time'] = pd.to_datetime(df_viewing['Start Time'])
+df_viewing = df_viewing.sort_values(by='Start Time')
+df_viewing['Duration'] = pd.to_timedelta(df_viewing['Duration'])
+df_viewing['End Time'] = df_viewing['Start Time'] + df_viewing['Duration']
 
-# Create Bokeh plot
-def create_interactive_plot(df):
-    p = figure(plot_width=800, plot_height=500, title='Device Type by Profile Name with Start Time',
-               x_axis_label='Start Time', y_axis_label='Profile Name')
+# Visualisasi interaktif dengan Streamlit
+def interactive_visualization(df):
+    st.title('Interactive Visualization with Streamlit')
 
-    # Get unique Profile Names
-    profile_names = df['Profile Name'].unique()
+    # Sidebar untuk pemilihan opsi
+    selected_profile = st.sidebar.selectbox('Select Profile Name:', df['Profile Name'].unique())
+    selected_device = st.sidebar.selectbox('Select Device Type:', df['Device Type'].unique())
 
-    # Assign a color to each unique Device Type using Viridis color palette
-    colors = Viridis[len(df['Device Type'].unique())]
+    # Filter data berdasarkan opsi yang dipilih
+    filtered_df = df[(df['Profile Name'] == selected_profile) & (df['Device Type'] == selected_device)]
 
-    legend_items = []
+    # Visualisasi Scatter Plot
+    st.subheader('Device Type by Profile Name with Start Time')
+    fig, ax = plt.subplots(figsize=(12, 8))
+    sns.scatterplot(x='Start Time', y='Profile Name', hue='Device Type', data=filtered_df, palette='viridis', ax=ax)
+    plt.title('Device Type by Profile Name with Start Time')
+    st.pyplot(fig)
 
-    for i, device_type in enumerate(df['Device Type'].unique()):
-        source = ColumnDataSource(df[df['Device Type'] == device_type])
-
-        # Scatter plot
-        scatter = p.scatter(x='Start Time', y='Profile Name', source=source,
-                            color=colors[i], size=8, legend_label=device_type)
-
-        # Add HoverTool
-        hover = HoverTool()
-        hover.tooltips = [('Profile Name', '@{Profile Name}'),
-                          ('Device Type', device_type),
-                          ('Start Time', '@{Start Time{%Y-%m-%d %H:%M:%S}}')]
-        hover.renderers = [scatter]
-        p.add_tools(hover)
-
-        # Box plot
-        box = p.circle(x='Start Time', y='Profile Name', source=source, size=10, color=colors[i], legend_label=device_type)
-
-        # Add legend items
-        legend_items.append((device_type, [scatter, box]))
-
-    # Add legend
-    legend = Legend(items=legend_items, location=(0, 0))
-    p.add_layout(legend, 'right')
-
-    return p
-
-# Streamlit app
-def main():
-    st.title('Interactive Visualization with Bokeh and Streamlit')
-
-    # Filter data
-    min_start_time = df_viewing['Start Time'].min()
-    max_start_time = df_viewing['Start Time'].max()
-
-    start_date = st.sidebar.date_picker("Select start date", min_value=min_start_time, max_value=max_start_time)
-    end_date = st.sidebar.date_picker("Select end date", min_value=start_date, max_value=max_start_time)
-
-    # Ensure that start_date and end_date are datetime objects
-    start_date = datetime.combine(start_date, datetime.min.time())
-    end_date = datetime.combine(end_date, datetime.min.time())
-
-    # Filter the DataFrame
-    filtered_df = df_viewing.loc[(df_viewing['Start Time'] >= start_date) & (df_viewing['Start Time'] <= end_date)]
-
-    # Create Bokeh plot
-    bokeh_plot = create_interactive_plot(filtered_df)
-
-    # Display Bokeh plot using st.bokeh_chart
-    st.bokeh_chart(bokeh_plot)
-
-if __name__ == '__main__':
-    main()
+# Panggil fungsi visualisasi interaktif
+interactive_visualization(df_viewing)
