@@ -13,6 +13,7 @@ df_viewing = pd.read_csv('All_ViewingActivity.csv')
 
 # Konversi Durasi ke Detik
 df_viewing['Duration_seconds'] = pd.to_timedelta(df_viewing['Duration']).dt.total_seconds()
+
 # Mengubah kolom Start Time ke tipe datetime dan Mengurutkan berdasarkan waktu
 df_viewing['Start Time'] = pd.to_datetime(df_viewing['Start Time'])
 df_viewing = df_viewing.sort_values(by='Start Time')
@@ -21,7 +22,7 @@ df_viewing['End Time'] = df_viewing['Start Time'] + df_viewing['Duration']
 
 # Visualisasi interaktif dengan Streamlit
 def interactive_visualization(df):
-    st.title('Visualization User Viewing Activity')
+    st.title('Interactive Visualization with Streamlit')
 
     # Sidebar untuk pemilihan opsi
     selected_profile = st.sidebar.selectbox('Select Profile Name:', df['Profile Name'].unique())
@@ -32,13 +33,18 @@ def interactive_visualization(df):
 
     # Visualisasi Scatter Plot
     st.subheader('Device Type by Profile Name with Start Time')
-    fig, ax = plt.subplots(figsize=(16, 10))
+    fig, ax = plt.subplots(figsize=(16, 10))  # Ubah ukuran plot di sini
     sns.scatterplot(x='Start Time', y='Profile Name', hue='Device Type', data=filtered_df, palette='viridis', ax=ax)
     plt.title('Device Type by Profile Name with Start Time')
     st.pyplot(fig)
 
     # Deteksi Anomali
     st.subheader('Anomaly Detection')
+
+    # Debugging: Tampilkan jenis data dan nilai unik dari kolom "Duration"
+    st.write("Data Types:", df_viewing.dtypes)
+    st.write("Unique Durations:", df_viewing['Duration'].unique())
+
     features = ['Duration_seconds']
     isolation_forest = IsolationForest(contamination=0.05)  # Ubah tingkat kontaminasi sesuai kebutuhan
     filtered_df['Anomaly'] = isolation_forest.fit_predict(filtered_df[features])
