@@ -64,17 +64,23 @@ def main():
     st.title('Interactive Visualization with Bokeh and Streamlit')
 
     # Filter data
-    start_time = st.date_input('Select start date', min_value=df_viewing['Start Time'].min().date(), max_value=df_viewing['Start Time'].max().date())
-    end_time = st.date_input('Select end date', min_value=start_time, max_value=df_viewing['Start Time'].max().date())
+    min_start_time = df_viewing['Start Time'].min()
+    max_start_time = df_viewing['Start Time'].max()
 
-    # Filter data based on date range
-    filtered_df = df_viewing[(df_viewing['Start Time'] >= start_time) & (df_viewing['Start Time'] <= end_time)]
+    if not pd.isnull(min_start_time) and not pd.isnull(max_start_time):
+        start_time = st.date_input('Select start date', min_value=min_start_time.date(), max_value=max_start_time.date())
+        end_time = st.date_input('Select end date', min_value=start_time, max_value=max_start_time.date())
 
-    # Create Bokeh plot
-    bokeh_plot = create_interactive_plot(filtered_df)
+        # Filter data based on date range
+        filtered_df = df_viewing[(df_viewing['Start Time'] >= start_time) & (df_viewing['Start Time'] <= end_time)]
 
-    # Display Bokeh plot using st.bokeh_chart
-    st.bokeh_chart(bokeh_plot)
+        # Create Bokeh plot
+        bokeh_plot = create_interactive_plot(filtered_df)
+
+        # Display Bokeh plot using st.bokeh_chart
+        st.bokeh_chart(bokeh_plot)
+    else:
+        st.warning("No valid date range available in the data.")
 
 if __name__ == '__main__':
     main()
