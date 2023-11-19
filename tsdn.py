@@ -32,7 +32,7 @@ def interactive_visualization(df):
 
     # Visualisasi Scatter Plot
     st.subheader('Device Type by Profile Name with Start Time')
-    fig, ax = plt.subplots(figsize=(18, 12))
+    fig, ax = plt.subplots(figsize=(16, 14))
     sns.scatterplot(x='Start Time', y='Profile Name', hue='Device Type', data=filtered_df, palette='viridis', ax=ax)
     plt.title('Device Type by Profile Name with Start Time')
     st.pyplot(fig)
