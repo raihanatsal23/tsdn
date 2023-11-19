@@ -42,37 +42,39 @@ def interactive_visualization(df):
     # Filter data berdasarkan opsi yang dipilih
     filtered_df = df[(df['Profile Name'] == selected_profile) & (df['Device Type'] == selected_device)]
 
-    # Visualisasi Scatter Plot
-    st.subheader('Device Type by Profile Name with Start Time')
-    fig, ax = plt.subplots(figsize=(16, 10))
-    sns.scatterplot(x='Start Time', y='Profile Name', hue='Device Type', data=filtered_df, palette='viridis', ax=ax)
-    plt.title('Device Type by Profile Name with Start Time')
-    st.pyplot(fig)
+    # Reset Pandas options to default
+    with pd.option_context('mode.use_inf_as_null', False):
+        # Visualisasi Scatter Plot
+        st.subheader('Device Type by Profile Name with Start Time')
+        fig, ax = plt.subplots(figsize=(16, 10))
+        sns.scatterplot(x='Start Time', y='Profile Name', hue='Device Type', data=filtered_df, palette='viridis', ax=ax)
+        plt.title('Device Type by Profile Name with Start Time')
+        st.pyplot(fig)
 
-    # Line chart for Duration_seconds
-    st.subheader('Duration Over Time')
-    fig_line, ax_line = plt.subplots(figsize=(12, 8))
-    sns.lineplot(x='Start Time', y='Duration_seconds', data=filtered_df, ax=ax_line)
-    ax_line.set_xlabel('Start Time')
-    ax_line.set_ylabel('Duration (seconds)')
-    ax_line.set_title('Duration Over Time')
-    st.pyplot(fig_line)
+        # Line chart for Duration_seconds
+        st.subheader('Duration Over Time')
+        fig_line, ax_line = plt.subplots(figsize=(12, 8))
+        sns.lineplot(x='Start Time', y='Duration_seconds', data=filtered_df, ax=ax_line)
+        ax_line.set_xlabel('Start Time')
+        ax_line.set_ylabel('Duration (seconds)')
+        ax_line.set_title('Duration Over Time')
+        st.pyplot(fig_line)
 
-    # Area chart for User_Device_Count
-    st.subheader('User Device Count Over Time')
-    fig_area, ax_area = plt.subplots(figsize=(12, 8))
-    sns.areaplot(x='Start Time', y='User_Device_Count', data=filtered_df, ax=ax_area)
-    ax_area.set_xlabel('Start Time')
-    ax_area.set_ylabel('User Device Count')
-    ax_area.set_title('User Device Count Over Time')
-    st.pyplot(fig_area)
+        # Area chart for User_Device_Count
+        st.subheader('User Device Count Over Time')
+        fig_area, ax_area = plt.subplots(figsize=(12, 8))
+        sns.lineplot(x='Start Time', y='User_Device_Count', data=filtered_df, ax=ax_area)
+        ax_area.set_xlabel('Start Time')
+        ax_area.set_ylabel('User Device Count')
+        ax_area.set_title('User Device Count Over Time')
+        st.pyplot(fig_area)
 
-    # Pie chart for is_Possibly_Sharing
-    st.subheader('Possibly Sharing Status')
-    fig_pie, ax_pie = plt.subplots(figsize=(8, 8))
-    filtered_df['is_Possibly_Sharing'].value_counts().plot.pie(autopct='%1.1f%%', ax=ax_pie)
-    ax_pie.set_title('Possibly Sharing Status')
-    st.pyplot(fig_pie)
+        # Pie chart for is_Possibly_Sharing
+        st.subheader('Possibly Sharing Status')
+        fig_pie, ax_pie = plt.subplots(figsize=(8, 8))
+        filtered_df['is_Possibly_Sharing'].value_counts().plot.pie(autopct='%1.1f%%', ax=ax_pie)
+        ax_pie.set_title('Possibly Sharing Status')
+        st.pyplot(fig_pie)
 
 # Panggil fungsi visualisasi interaktif
 interactive_visualization(df_viewing)
