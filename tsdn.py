@@ -37,5 +37,15 @@ def interactive_visualization(df):
     plt.title('Device Type by Profile Name with Start Time')
     st.pyplot(fig)
 
+    # Deteksi Anomali
+    st.subheader('Anomaly Detection')
+    features = ['Duration_seconds']
+    isolation_forest = IsolationForest(contamination=0.05)  # Ubah tingkat kontaminasi sesuai kebutuhan
+    filtered_df['Anomaly'] = isolation_forest.fit_predict(filtered_df[features])
+
+    # Tampilkan data anomali
+    st.write("Anomalous Data:")
+    st.write(filtered_df[filtered_df['Anomaly'] == -1])
+
 # Panggil fungsi visualisasi interaktif
 interactive_visualization(df_viewing)
