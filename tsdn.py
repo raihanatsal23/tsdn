@@ -46,12 +46,8 @@ def interactive_visualization(df):
     # Filter data berdasarkan opsi yang dipilih
     filtered_df = df[(df['Profile Name'] == selected_profile) & (df['Device Type'] == selected_device)]
 
-    temp = filtered_df.loc['is_Possibly_Sharing'].values
-    if temp[0] == True:
-        st.subheader(f'{selected_profile} indicated for account sharing!')
-    else:
-        st.subheader(f'{selected_profile} may be safe.')
-    
+    st.subheader(f'{selected_profile} may be sharing the account!')
+
     # Visualisasi Scatter Plot
     st.subheader('Device Type by Profile Name with Start Time')
     fig, ax = plt.subplots(figsize=(16, 10))
