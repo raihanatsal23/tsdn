@@ -16,6 +16,9 @@ df_viewing = pd.read_csv('All_ViewingActivity.csv')
 # Convert Start Time to datetime
 df_viewing['Start Time'] = pd.to_datetime(df_viewing['Start Time'])
 
+# Handling NaN values
+df_viewing = df_viewing.dropna(subset=['Start Time'])
+
 # Create Bokeh plot
 def create_interactive_plot(df):
     p = figure(plot_width=800, plot_height=500, title='Device Type by Profile Name with Start Time',
@@ -61,9 +64,10 @@ def main():
     st.title('Interactive Visualization with Bokeh and Streamlit')
 
     # Filter data
-    start_time = st.date_input('Select start date', min_value=df_viewing['Start Time'].min(), max_value=df_viewing['Start Time'].max())
-    end_time = st.date_input('Select end date', min_value=start_time, max_value=df_viewing['Start Time'].max())
+    start_time = st.date_input('Select start date', min_value=df_viewing['Start Time'].min(), max_value=df_viewing['Start Time'].max(), format='YYYY-MM-DD')
+    end_time = st.date_input('Select end date', min_value=start_time, max_value=df_viewing['Start Time'].max(), format='YYYY-MM-DD')
 
+    # Filter data based on date range
     filtered_df = df_viewing[(df_viewing['Start Time'] >= start_time) & (df_viewing['Start Time'] <= end_time)]
 
     # Create Bokeh plot
