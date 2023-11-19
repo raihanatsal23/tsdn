@@ -53,5 +53,12 @@ def interactive_visualization(df):
     st.subheader('Detailed Information:')
     st.table(filtered_df[['Start Time', 'Device Type', 'Country', 'Duration_seconds', 'is_Possibly_Sharing']])
 
+    # Visualisasi Scatter Plot
+    st.subheader('Device Type by Profile Name with Start Time')
+    fig, ax = plt.subplots(figsize=(16, 10))
+    sns.scatterplot(x='Start Time', y='Profile Name', hue='Device Type', data=filtered_df, palette='viridis', ax=ax)
+    plt.title('Device Type by Profile Name with Start Time')
+    st.pyplot(fig)
+
 # Panggil fungsi visualisasi interaktif
 interactive_visualization(df_viewing)
