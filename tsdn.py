@@ -2,10 +2,6 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.ensemble import IsolationForest
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import LabelEncoder
-from scipy.stats import zscore
 import seaborn as sns
 
 # Baca data
@@ -53,30 +49,30 @@ def interactive_visualization(df):
     plt.title('Device Type by Profile Name with Start Time')
     st.pyplot(fig)
 
-    # Bar chart for User_Device_Count
-    st.subheader('User Device Count')
-    fig1, ax1 = plt.subplots(figsize=(12, 8))
-    ax1.bar(filtered_df['Profile Name'], filtered_df['User_Device_Count'])
-    ax1.set_xlabel('Profile Name')
-    ax1.set_ylabel('User Device Count')
-    ax1.set_title('User Device Count')
-    st.pyplot(fig1)
+    # Line chart for Duration_seconds
+    st.subheader('Duration Over Time')
+    fig_line, ax_line = plt.subplots(figsize=(12, 8))
+    sns.lineplot(x='Start Time', y='Duration_seconds', data=filtered_df, ax=ax_line)
+    ax_line.set_xlabel('Start Time')
+    ax_line.set_ylabel('Duration (seconds)')
+    ax_line.set_title('Duration Over Time')
+    st.pyplot(fig_line)
 
-    # Bar chart for User_Country_Count
-    st.subheader('User Country Count')
-    fig2, ax2 = plt.subplots(figsize=(12, 8))
-    ax2.bar(filtered_df['Profile Name'], filtered_df['User_Country_Count'])
-    ax2.set_xlabel('Profile Name')
-    ax2.set_ylabel('User Country Count')
-    ax2.set_title('User Country Count')
-    st.pyplot(fig2)
+    # Area chart for User_Device_Count
+    st.subheader('User Device Count Over Time')
+    fig_area, ax_area = plt.subplots(figsize=(12, 8))
+    sns.areaplot(x='Start Time', y='User_Device_Count', data=filtered_df, ax=ax_area)
+    ax_area.set_xlabel('Start Time')
+    ax_area.set_ylabel('User Device Count')
+    ax_area.set_title('User Device Count Over Time')
+    st.pyplot(fig_area)
 
     # Pie chart for is_Possibly_Sharing
     st.subheader('Possibly Sharing Status')
-    fig3, ax3 = plt.subplots(figsize=(8, 8))
-    filtered_df['is_Possibly_Sharing'].value_counts().plot.pie(autopct='%1.1f%%', ax=ax3)
-    ax3.set_title('Possibly Sharing Status')
-    st.pyplot(fig3)
+    fig_pie, ax_pie = plt.subplots(figsize=(8, 8))
+    filtered_df['is_Possibly_Sharing'].value_counts().plot.pie(autopct='%1.1f%%', ax=ax_pie)
+    ax_pie.set_title('Possibly Sharing Status')
+    st.pyplot(fig_pie)
 
 # Panggil fungsi visualisasi interaktif
 interactive_visualization(df_viewing)
