@@ -63,8 +63,8 @@ def main():
     min_start_time = df_viewing['Start Time'].min()
     max_start_time = df_viewing['Start Time'].max()
 
-    start_date = st.sidebar.date_input("Select start date", min_value=min_start_time, max_value=max_start_time)
-    end_date = st.sidebar.date_input("Select end date", min_value=start_date, max_value=max_start_time)
+    start_date = st.sidebar.date_picker("Select start date", min_value=min_start_time, max_value=max_start_time)
+    end_date = st.sidebar.date_picker("Select end date", min_value=start_date, max_value=max_start_time)
 
     # Ensure that start_date and end_date are datetime objects
     start_date = datetime.combine(start_date, datetime.min.time())
