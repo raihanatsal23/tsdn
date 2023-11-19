@@ -46,7 +46,7 @@ def interactive_visualization(df):
     # Filter data berdasarkan opsi yang dipilih
     filtered_df = df[(df['Profile Name'] == selected_profile) & (df['Device Type'] == selected_device)]
 
-    temp = filtered_df.loc[filtered_df['Profile Name'] == 'User 4', 'is_Possibly_Sharing'].values
+    temp = filtered_df.loc['is_Possibly_Sharing'].values
     if temp[0] == True:
         st.subheader(f'{selected_profile} indicated for account sharing!')
     else:
